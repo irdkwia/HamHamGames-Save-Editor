@@ -1,0 +1,31 @@
+#0: 
+ハムちゃんずチーム
+Team Ham-Hams
+Equipo Ham-Hams
+Équipe Ham-Ham
+Team Ham-Hams
+Squadra Ham-Hams
+
+#01: 
+にじのくにチーム
+Team Rainbow
+Equipo Arco Iris
+Équipe Arc-en-ciel
+Team Rebogen
+Squadra Arcobaleno
+
+#02: 
+ハムクックチーム
+Team Seahams
+Equipo Pirata
+Équipe Brochet
+Team Korso
+Squadra Pirata
+
+#03: 
+ジャンガルチーム
+Team Djungle
+Equipo Djungario
+Équipe Djungle
+Team Djungal
+Squadra Zungla

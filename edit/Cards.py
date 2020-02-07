@@ -61,6 +61,10 @@ def CreateWindowCards():
         frameCard = Frame(winCard)
         frameCard.pack(side=RIGHT, fill=BOTH, expand=1)
         
+        Label(frameCard, text="Internal Code: ", anchor='w', font=FONT).pack(side=TOP, fill=X)
+        builtins.entryCode = Entry(frameCard, font=FONT)
+        entryCode.pack(side=TOP, fill=X)
+        
         Label(frameCard, text="Name: ", anchor='w', font=FONT).pack(side=TOP, fill=X)
         builtins.entryName = Entry(frameCard, font=FONT)
         entryName.pack(side=TOP, fill=X)
@@ -84,7 +88,9 @@ def CreateWindowCards():
         radioMale.pack(side=TOP, fill=X)
         builtins.radioFemale = Radiobutton(frameCard, variable=gender, text="Female", value="F", font=FONT, bd=0, anchor='w')
         radioFemale.pack(side=TOP, fill=X)
-        builtins.radioSecret = Radiobutton(frameCard, variable=gender, text="Secret", value="S", font=FONT, bd=0, anchor='w')
+        builtins.radioSecret = Radiobutton(frameCard, variable=gender, text="Secret (M)", value="S1", font=FONT, bd=0, anchor='w')
+        radioSecret.pack(side=TOP, fill=X)
+        builtins.radioSecret = Radiobutton(frameCard, variable=gender, text="Secret (F)", value="S2", font=FONT, bd=0, anchor='w')
         radioSecret.pack(side=TOP, fill=X)
         
         Label(frameCard, text="Message: ", anchor='w', font=FONT).pack(side=TOP, fill=X)
@@ -157,7 +163,7 @@ def ImportCard():
             if len(card)==FC_SIZE:
                 save.data = AddFC(save.data, card)
                 labelMessageCard.config(text="Added card!", fg='black')
-                RefreshListCard()
+                SwitchFriendCard()
                 lstCards.select_clear(0, END)
                 lstCards.select_set(GetTopList(save.data)-1)
                 lstCards.activate(GetTopList(save.data)-1)
@@ -193,7 +199,7 @@ def AddEmptyCard():
         if len(card)==FC_SIZE:
             save.data = AddFC(save.data, card)
             labelMessageCard.config(text="Added card!", fg='black')
-            RefreshListCard()
+            SwitchFriendCard()
             lstCards.select_clear(0, END)
             lstCards.select_set(GetTopList(save.data)-1)
             lstCards.activate(GetTopList(save.data)-1)
@@ -208,8 +214,8 @@ def SaveCard():
         card = GetPC(save.data)
     else:
         card = GetFC(save.data, lstCards.index(ACTIVE))
-    
     try:
+        card = SetPropertiesFC(card, code=int(entryCode.get(), 16))
         card = SetPropertiesFC(card, name=convertunencodable(entryName.get()),
                     description=(convertunencodable(entryDesc1.get()), convertunencodable(entryDesc2.get())))
         card = SetPropertiesFC(card, birthdate=(int(entryBirthY.get()), int(entryBirthM.get()), int(entryBirthD.get())))
@@ -217,8 +223,10 @@ def SaveCard():
             card = SetPropertiesFC(card, gender=0)
         elif gender.get()=="F":
             card = SetPropertiesFC(card, gender=1)
-        else:
+        elif gender.get()=="S1":
             card = SetPropertiesFC(card, gender=2)
+        else:
+            card = SetPropertiesFC(card, gender=3)
         
         card = SetPropertiesFC(card, costume=int(entryCost.get()), color=int(entryColor.get()))
         
@@ -276,6 +284,8 @@ def RefreshCardValues(i=None):
             lstCards.activate(lstCards.curselection()[0])
         except:
             return
+    entryCode.delete(0, END)
+    entryCode.insert(0, ("%08x" % GetPropertyFC(card, "code")).upper())
     entryName.delete(0, END)
     entryName.insert(0, convertencodable(GetPropertyFC(card, "name")))
     desc = GetPropertyFC(card, "description")
@@ -297,8 +307,10 @@ def RefreshCardValues(i=None):
         gender.set("M")
     elif gen==1:
         gender.set("F")
+    elif gen==2:
+        gender.set("S1")
     else:
-        gender.set("S")
+        gender.set("S2")
     entryCost.delete(0, END)
     entryCost.insert(0, str(GetPropertyFC(card, "costume")))
     
@@ -336,8 +348,6 @@ def SwitchPlayerCard():
     lstCards.select_set(0)
     RefreshCardValues()
     lstCards.config(state='disabled')
-    buttonAddCard.config(state='disabled')
-    buttonImpCard.config(state='disabled')
     buttonDelCard.config(state='disabled')
     
 def SwitchFriendCard():
@@ -346,9 +356,8 @@ def SwitchFriendCard():
         cardType.set('Player')
         SwitchPlayerCard()
     else:
+        cardType.set('Friends')
         lstCards.config(state='normal')
-        buttonAddCard.config(state='normal')
-        buttonImpCard.config(state='normal')
         buttonDelCard.config(state='normal')
         RefreshListCard()
         lstCards.select_set(0)

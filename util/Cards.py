@@ -54,7 +54,9 @@ def SetFC(data, card, num):
     return data
 
 def GetPropertyFC(card, p):
-    if p == "name":
+    if p == "code":
+        return card[0x0]+card[0x1]*256**1+card[0x2]*256**2+card[0x3]*256**3
+    elif p == "name":
         length = card[0x5]
         return decodeNative(card[0x6:0x6+length*4])
     elif p == "birthdate":
@@ -86,6 +88,8 @@ def GetPropertyFC(card, p):
 
 def SetPropertiesFC(card, **args):
     for p, v in args.items():
+        if p == "code":
+            card = bytes([v%256, (v//256)%256, (v//(256**2))%256, (v//(256**3))%256])+card[0x4:]
         if p == "name":
             if len(v)>0x10:
                 raise Exception("Too long name")

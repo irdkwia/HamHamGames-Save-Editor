@@ -1,6 +1,6 @@
 FONT = "arial 10"
 
-with open("res//Teams.txt") as file:
+with open("res//Teams.txt", encoding="utf-8") as file:
     content = file.read().split("\n")
     file.close()
 
@@ -11,7 +11,7 @@ for i in range(len(content)):
     elif i%8<7:
         teamnames[-1].append(content[i])
 
-with open("res//Characters.txt") as file:
+with open("res//Characters.txt", encoding="utf-8") as file:
     content = file.read().split("\n")
     file.close()
 
@@ -22,7 +22,7 @@ for i in range(len(content)):
     elif i%8<7:
         characters[-1].append(content[i])
 
-with open("res//Costumes.txt") as file:
+with open("res//Costumes.txt", encoding="utf-8") as file:
     content = file.read().split("\n")
     file.close()
 
@@ -34,7 +34,7 @@ for i in range(len(content)):
         costumes[-1].append(content[i])
 
 
-with open("res//Events.txt") as file:
+with open("res//Events.txt", encoding="utf-8") as file:
     content = file.read().split("\n")
     file.close()
 
